@@ -1,0 +1,117 @@
+documents/
+  description.txt tutorial.txt
+  --> We don't care, but check that those are the only ones
+files/
+  checker.cpp testlib.h
+  --> Check that those two are present
+  generate.cpp validate.cpp
+  --> Check that there are no other .cpp or .h files
+  (other stuff)
+samples/
+  X / X.a where X is a number
+  --> we probably don't care
+scripts/
+  --> check that it's empty
+solutions/
+  --> would be nice to export them with unambiguous names ("correct-0", "wrong-0", "wrong-1")
+statements/
+  english/
+    problem.tex
+    --> this is the statement we care about
+    problem-properties.json
+    --> contains time and memory limit
+tests/
+  X / X.a where X is a number
+  --> we care!
+
+check.cpp
+--> why is this here? what if it's different than files/checker.cpp?
+problem.xml
+--> MAIN THING
+
+
+---structure of problem.xml---
+problem[url, short-name, revision]
+  names (COLLECTION)
+    name[language, value]                   // <- we need exactly 1 with language=english
+  statements (COLLECTION)
+    statement[language,type,path, charset?] // <- we need exactly 1 with language=english type="application/x-tex" charset="UTF-8"
+  tutorials
+    tutorial[language, type, path, charset?]              // we don't care
+  judging[output-file, input-file, cpu-speed, cpu-name] // WHAT'S THIS CPU-SPEED? also make sure outpit-file and input-file are empty
+    testset[name] (MULTIPLE OF THIS)           // add them all together?
+      time-limit (TEXT)
+      memory-limit (TEXT)
+      test-count (TEXT)
+      input-path-pattern (TEXT, contains %02d)
+      answer-path-pattern (same)
+      tests (COLLECTION)
+        test[sample?, method, cmd?]             // RESPECT sample, ignore the rest
+  files
+    resources (COLLECTION)
+      file[path, type]      // ignore?
+    executables (COLLECTION)
+      executable
+        source[type, path]       // we don't care I think
+  assets
+    checker[type]  // make sure type=testlib
+      source[type,path]  // make sure type="cpp.g++11"  or a different g++ in which case we need to remember it and compile properly
+      copy[type,path]  // uh...what?
+      testset // IGNORE
+    validators (COLLECTION, ignore)
+    solutions (COLLECTION, !!!!!!!!!!!!!!!!!)
+      solution[tag]   // tag can be 'main'/'accepted' (OK), anything else not OK BUT WE NEED TO KNOW WHAT SO WE CAN CONVERT
+        source[type,path] // we don't really care about type, just path
+  properties
+    // who cares?
+  stresses
+    // who cares?
+  documents
+    // who cares?
+
+
+
+-----DOMJUDGE FORMAT------
+  domjudge-problem.ini
+    name (DEFAULTS TO contestproblem:shortname aka probid)
+    timelimit (DEFAULTS TO 10)
+    special_run
+    special_compare
+    probid (WHICH IS REALLY contestproblem:shortname)
+    allow_submit (DEFAULT 1)
+    allow_judge (DEFAULT 1)
+    points (DEFAULT 1)
+    color
+    // there's also problwm:externalid which is zip name without chars [^a-zA-Z0-9-_]
+
+  problem.yaml
+    uuid (AKA contestproblem:shortname)
+    name
+      [map from lang to name, or single name]
+    validator_flags (AKA special_compare_args)
+    validation=custom
+      // THIS MEANS THERE ARE FILES output_validators/
+      // INCLUDING A build AND A run WHICH DOMJUDGE WILL IMPORT YESSSS
+    limits
+      memory (in MEGABYTES)
+      output (in MEGABYTES)
+
+  problem.pdf
+  problem.html
+  problem.txt
+  // ONE OF THOSE ONLY is the statement
+
+  data/[sample|secret]/XXX.[in|ans] // XXX can be anything, imported in alphabetical order
+  // can also have a XXX.desc file for the description
+  // can also have XXX.[png|jpg|jpeg|gif] for an image
+
+  // WE MUST ASSOCIATE ADMIN ACCOUNT WITH A JURY TEAM, THEN: (assuming allow_subit is true)
+  submissions/
+    [expectedresult/]
+      // EACH FILE is... a file, OR A COLLECTION OF FILES
+      // lang autodetected from file extension
+      // EXPECTEDRESULT CAN BE memory-limit,output-limit,run-error,timelimit,wrong-answer,no-output,correct  
+
+
+  .timelimit
+    // alternative way of specifying time limit via text
