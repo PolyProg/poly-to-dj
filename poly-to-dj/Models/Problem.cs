@@ -12,13 +12,14 @@ namespace PolyToDJ.Models
         public ProblemFile Statement { get; } // TODO do we just enforce this to be a pdf?
         public ProblemLimits Limits { get; }
         public ImmutableArray<ProblemTestCase> TestCases { get; }
+        public ImmutableArray<(ProblemFile, ProblemJudgement)> Solutions { get; }
 
         /// <summary>
         /// May be null.
         /// </summary>
         public ProblemChecker Checker { get; }
 
-        public Problem(string id, string name, string color, ProblemFile statement, ProblemLimits limits, ImmutableArray<ProblemTestCase> testCases, ProblemChecker checker)
+        public Problem(string id, string name, string color, ProblemFile statement, ProblemLimits limits, ImmutableArray<ProblemTestCase> testCases, ProblemChecker checker, ImmutableArray<(ProblemFile, ProblemJudgement)> solutions)
         {
             Id = id ?? throw new ArgumentNullException(nameof(id));
             Name = name ?? throw new ArgumentNullException(nameof(name));
@@ -27,6 +28,7 @@ namespace PolyToDJ.Models
             Limits = limits ?? throw new ArgumentNullException(nameof(limits));
             TestCases = testCases;
             Checker = checker;
+            Solutions = solutions;
         }
     }
 }

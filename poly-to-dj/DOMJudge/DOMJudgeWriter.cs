@@ -73,6 +73,17 @@ namespace PolyToDJ.DOMJudge
             File.WriteAllText(Path.Combine(checkerDir, "run"), ReadResource("DOMJudge.run"));
             File.WriteAllText(Path.Combine(checkerDir, "build"), $"#!/bin/sh\ng++ -std={checkerLang} -O2 {problem.Checker.MainFile.Name} -o checker");
 
+            // solutions
+            var solutionsDir = Path.Combine(dir, "submissions");
+            Directory.CreateDirectory(solutionsDir);
+            foreach(var sol in problem.Solutions)
+            {
+                var jtext = sol.Item2 == ProblemJudgement.Accepted ? "accepted" : sol.Item2 == ProblemJudgement.TimeLimit ? "time_limit_exceeded" : sol.Item2 == ProblemJudgement.WrongAnswer ? "wrong_answer" : "run_time_error";
+                var solDir = Path.Combine(solutionsDir, jtext);
+                Directory.CreateDirectory(solDir);
+                File.WriteAllBytes(Path.Combine(solDir, sol.Item1.Name), sol.Item1.Content.ToArray());
+            }
+
             ZipFile.CreateFromDirectory(dir, path);
         }
 

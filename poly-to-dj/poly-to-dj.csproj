@@ -6,22 +6,17 @@
     <NoWin32Manifest>true</NoWin32Manifest>
     <StartupObject>PolyToDJ.Program</StartupObject>
     <AssemblyName>PolyToDJ</AssemblyName>
+    <Platforms>AnyCPU</Platforms>
   </PropertyGroup>
   <ItemGroup>
     <None Remove="DOMJudge\run" />
-    <None Remove="Polygon\footer.tex" />
-    <None Remove="Polygon\header.tex" />
-    <None Remove="Polygon\problem.pdf" />
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="DOMJudge\run" />
-    <EmbeddedResource Include="Polygon\footer.tex" />
-    <EmbeddedResource Include="Polygon\header.tex" />
-    <EmbeddedResource Include="Polygon\problem.pdf" />
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="Microsoft.Extensions.CommandLineUtils" Version="1.1.1" />
-    <PackageReference Include="System.Collections.Immutable" Version="1.4.0" />
-    <PackageReference Include="YamlDotNet" Version="4.3.1" />
+    <PackageReference Include="System.Collections.Immutable" Version="1.5.0" />
+    <PackageReference Include="YamlDotNet" Version="6.0.0" />
   </ItemGroup>
 </Project>

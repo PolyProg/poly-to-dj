@@ -137,49 +137,32 @@ namespace PolyToDJ.Polygon
             AssertNoOtherChildren(statementsElem, "statement");
             var statementPath = statementsElem.Elements("statement").Single(statementElem =>
             {
-                AssertNoOtherAttributes(statementElem, "charset", "language", "path", "type", "mathjax");
+                AssertNoOtherAttributes(statementElem, "language", "path", "type", "charset", "mathjax");
                 AssertNoChildren(statementElem);
-                return statementElem.Attribute("type").Value == "application/x-tex";
+                return statementElem.Attribute("type").Value == "application/pdf";
             }).Attribute("path").Value;
-            // Magic latex stuff
-            /*var statementTex = ReadZipEntryText(zip.GetEntry(statementPath));
-            var tempDir = Path.Combine(Path.GetTempPath(), Guid.NewGuid().ToString());
-            Directory.CreateDirectory(tempDir);
-            var header = ReadResource("Polygon.header.tex");
-            var footer = ReadResource("Polygon.footer.tex");
-            File.WriteAllText(Path.Combine(tempDir, "statement.tex"),
-                header +
-                // TODO make that work
-                //@"\addtocounter{problem}{" + (problemLetter - 'A') + "}\n" + // fix to have the proper letter
-                statementTex +
-                footer);
-            // also we need olymp.sty for some reason
-            File.WriteAllText(Path.Combine(tempDir, "olymp.sty"), ReadZipEntryText(zip.GetEntry(allFiles.Single(f => f.EndsWith("olymp.sty")))));
-             var process = new Process
-             {
-                 StartInfo = new ProcessStartInfo
-                 {
-                     FileName = "pdflatex",
-                     Arguments = "statement.tex",
-                     WorkingDirectory = tempDir
-                 }
-             };
-             process.Start();
-             process.WaitForExit();
-             Console.WriteLine(tempDir);
-            var statementPdf = Path.Combine(tempDir, "statement.pdf");*/
 
             // TODO support solutions
+            var solutions = new List<(ProblemFile, ProblemJudgement)>();
+            var solutionsElem = SingleChild(assetsElem, "solutions");
+            foreach (var sol in solutionsElem.Elements())
+            {
+                var result = sol.Attribute("tag").Value;
+                var j = result == "accepted" ? ProblemJudgement.Accepted : result == "main" ? ProblemJudgement.Accepted : result == "wrong-answer" ? ProblemJudgement.WrongAnswer : result == "time-limit-exceeded" ? ProblemJudgement.TimeLimit : ProblemJudgement.OtherError;
+                var source = sol.Element("source").Attribute("path").Value;
+                solutions.Add((ReadZipEntry(zip.GetEntry(source)), j));
+            }
 
             // We ignore properties, stresses and documents
             return new Problem(
-                id: problemLetter.ToString(), //problemId,
+                id: problemLetter.ToString(),
                 name: problemName,
                 color: problemColor,
-                statement: new ProblemFile("statement.pdf",  ReadResourceBytes("Polygon.problem.pdf") /*File.ReadAllBytes(statementPdf).ToImmutableArray()*/),
+                statement: ReadZipEntry(zip.GetEntry(statementPath)),
                 checker: problemChecker,
                 limits: new ProblemLimits(problemTests.TimeLimit / 1000.0M, problemTests.MemoryLimit),
-                testCases: problemTests.Tests.ToImmutableArray()
+                testCases: problemTests.Tests.ToImmutableArray(),
+                solutions: solutions.ToImmutableArray()
             );
         }
 
