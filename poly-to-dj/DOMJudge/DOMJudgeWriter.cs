@@ -14,7 +14,7 @@ namespace PolyToDJ.DOMJudge
         public static void Write(Problem problem, string path)
         {
             var ini = new StringBuilder();
-            ini.Append($"name='{problem.Name}'\n");
+            ini.Append($"name='{problem.Name.Replace("'", "\\'")}'\n"); // ESCAPING IS IMPORTANT (ideally we'd do it properly according to the INI file standard)
             ini.Append($"timelimit={problem.Limits.Time.ToString(CultureInfo.InvariantCulture)}\n");
             ini.Append($"probid='{problem.Id}'\n");
             ini.Append($"color='{problem.Color}'\n");
@@ -76,12 +76,12 @@ namespace PolyToDJ.DOMJudge
             // solutions
             var solutionsDir = Path.Combine(dir, "submissions");
             Directory.CreateDirectory(solutionsDir);
-            foreach(var sol in problem.Solutions)
+            foreach (var sol in problem.Solutions)
             {
                 var jtext = sol.Item2 == ProblemJudgement.Accepted ? "accepted" : sol.Item2 == ProblemJudgement.TimeLimit ? "time_limit_exceeded" : sol.Item2 == ProblemJudgement.WrongAnswer ? "wrong_answer" : "run_time_error";
                 var solDir = Path.Combine(solutionsDir, jtext);
                 Directory.CreateDirectory(solDir);
-                File.WriteAllBytes(Path.Combine(solDir, sol.Item1.Name), sol.Item1.Content.ToArray());
+                File.WriteAllBytes(Path.Combine(solDir, sol.Item1.Name.Replace(".py", ".py3") /* force python3 */), sol.Item1.Content.ToArray());
             }
 
             ZipFile.CreateFromDirectory(dir, path);

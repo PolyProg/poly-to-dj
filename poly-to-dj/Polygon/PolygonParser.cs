@@ -142,7 +142,7 @@ namespace PolyToDJ.Polygon
                 return statementElem.Attribute("type").Value == "application/pdf";
             }).Attribute("path").Value;
 
-            // TODO support solutions
+            // solutions
             var solutions = new List<(ProblemFile, ProblemJudgement)>();
             var solutionsElem = SingleChild(assetsElem, "solutions");
             foreach (var sol in solutionsElem.Elements())
