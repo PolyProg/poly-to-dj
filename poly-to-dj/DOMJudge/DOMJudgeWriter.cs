@@ -14,10 +14,10 @@ namespace PolyToDJ.DOMJudge
         public static void Write(Problem problem, string path)
         {
             var ini = new StringBuilder();
-            ini.Append($"name='{problem.Name.Replace("'", "\\'")}'\n"); // ESCAPING IS IMPORTANT (ideally we'd do it properly according to the INI file standard)
+            ini.Append($"name=\"{problem.Name}\"\n");
             ini.Append($"timelimit={problem.Limits.Time.ToString(CultureInfo.InvariantCulture)}\n");
-            ini.Append($"probid='{problem.Id}'\n");
-            ini.Append($"color='{problem.Color}'\n");
+            ini.Append($"probid=\"{problem.Id}\"\n");
+            ini.Append($"color=\"{problem.Color}\"\n");
 
             var yaml = new StringBuilder();
             yaml.Append("validation: custom\n");
