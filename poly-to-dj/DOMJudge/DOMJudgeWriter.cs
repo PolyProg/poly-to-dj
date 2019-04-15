@@ -74,6 +74,7 @@ namespace PolyToDJ.DOMJudge
             File.WriteAllText(Path.Combine(checkerDir, "build"), $"#!/bin/sh\ng++ -std={checkerLang} -O2 {problem.Checker.MainFile.Name} -o checker");
 
             // solutions
+            // TODO add #include <random> to all cpp files, Polygon just assumes it
             var solutionsDir = Path.Combine(dir, "submissions");
             Directory.CreateDirectory(solutionsDir);
             foreach (var sol in problem.Solutions)
