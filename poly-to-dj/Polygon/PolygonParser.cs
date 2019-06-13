@@ -135,7 +135,7 @@ namespace PolyToDJ.Polygon
             var statementsElem = SingleChild(problemElem, "statements");
             AssertNoAttributes(statementsElem);
             AssertNoOtherChildren(statementsElem, "statement");
-            var statementPath = statementsElem.Elements("statement").Single(statementElem =>
+            var statementPath = statementsElem.Elements("statement").Where(s => s.Attribute("language").Value == "english").Single(statementElem =>
             {
                 AssertNoOtherAttributes(statementElem, "language", "path", "type", "charset", "mathjax");
                 AssertNoChildren(statementElem);

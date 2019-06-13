@@ -21,8 +21,9 @@ namespace PolyToDJ.DOMJudge
 
             var yaml = new StringBuilder();
             yaml.Append("validation: custom\n");
-            yaml.Append("limits:\n");
-            yaml.Append($"  memory: {problem.Limits.Memory / (1024 * 1024)}\n");
+            // memory limits cause more problems than they solve
+            //yaml.Append("limits:\n");
+            //yaml.Append($"  memory: {problem.Limits.Memory / (1024 * 1024)}\n");
 
             var dir = Path.Combine(Path.GetTempPath(), Guid.NewGuid().ToString());
             Directory.CreateDirectory(dir);

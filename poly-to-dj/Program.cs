@@ -12,13 +12,13 @@ namespace PolyToDJ
         {
             // dependencies: texlive-full
 
-            foreach (var file in Directory.EnumerateFiles("D:\\HC2"))
+            foreach (var file in Directory.EnumerateFiles("D:\\MARTIAN\\contest"))
             {
                 var fff = new FileInfo(file);
                 Console.WriteLine(fff.Name);
                 var name = fff.Name.Replace("hc2-2019-", "").Replace("$linux.zip", "");
-                name = name.Substring(0, name.LastIndexOf('-')); // remove the dash then working copy number
-                var letter = (new Dictionary<string, char> {
+                //name = name.Substring(0, name.LastIndexOf('-')); // remove the dash then working copy number
+                var letter = name[0];/*(new Dictionary<string, char> {
                     {"hashpoly-easy", 'A'},
                     {"hashpoly-medium", 'B'},
                     {"hashpoly-hard", 'C'},
@@ -35,27 +35,19 @@ namespace PolyToDJ
                     {"mst-easy", 'N'},
                     {"mst-medium", 'O'},
                     {"mst-hard", 'P'},
-                })[name];
-                var color = (new Dictionary<string, string> {
-                    {"hashpoly-easy", "#FF0000"},
-                    {"hashpoly-medium", "#DD0000"},
-                    {"hashpoly-hard", "#BB0000"},
-                    {"spaceships-easy", "#0000FF"},
-                    {"spaceships-medium", "#0000DD"},
-                    {"spaceships-hard", "#0000BB"},
-                    {"rings-easy", "#FFFFFF"},
-                    {"rings-medium", "#DDDDDD"},
-                    {"rings-hard", "#BBBBBB"},
-                    {"cannon-field-easy", "#FF00FF"},
-                    {"cannon-field-hard", "#DD00DD"},
-                    {"expectations-easy", "#FFFF00"},
-                    {"expectations-hard", "#DDDD00"},
-                    {"mst-easy", "#00FF00"},
-                    {"mst-medium", "#00DD00"},
-                    {"mst-hard", "#00BB00"},
-                })[name];
+                })[name];*/
+                var color = (new Dictionary<char, string> {
+                    {'A', "#FF0000"},
+                    {'B', "#00FF00"},
+                    {'C', "#0000FF"},
+                    {'D', "#FFFF00"},
+                    {'E', "#FF00FF"},
+                    {'F', "#00FFFF"},
+                    {'G', "#FFFFFF"},
+                })[letter];
                 var problem = PolygonParser.Parse(fff.FullName, letter, color);
-                var outf = $"D:\\HC2\\out\\{letter}.zip";
+                var outf = $"D:\\MARTIAN\\contest\\out\\{letter}.zip";
+                Directory.CreateDirectory(outf.Replace($"{letter}.zip", ""));
                 if (File.Exists(outf))
                 {
                     File.Delete(outf);
